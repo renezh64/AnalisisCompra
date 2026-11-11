@@ -1,0 +1,11 @@
+Librerias requeridas
+
+pandas
+numpy
+requests
+beautifulsoup4
+matplotlib
+seaborn
+papermill
+jupyter
+nbconvert
