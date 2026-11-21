@@ -1,5 +1,6 @@
 #Librerias requeridas
 
+pytest
 pandas
 numpy
 requests
