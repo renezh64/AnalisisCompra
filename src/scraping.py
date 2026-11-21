@@ -3,7 +3,7 @@ from bs4 import BeautifulSoup
 import re
 
 
-def extraer_datos_producto(url: str) -> dict:
+def extraer_datos_ktronix(url: str) -> dict:
 
     headers = {
         "User-Agent": (

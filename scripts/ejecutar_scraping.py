@@ -1,4 +1,4 @@
-from src.scraping import extraer_datos_producto
+from src.scraping import extraer_datos_ktronix
 from src.procesamiento import limpiar_precio
 #URL del producto a extraer (se debe cambiar por la URL del producto que se desea extraer :D)
 url = "https://www.ktronix.com/audifonos-apple-airpods-pro-3-estuche-magsafe-usb-c-blanco/p/195950543612"
