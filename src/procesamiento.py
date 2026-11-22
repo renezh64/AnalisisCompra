@@ -9,7 +9,7 @@ def limpiar_precio(precio: str):
     $999.010 -> 999010
     """
 
-    if not preciou or preciou == "No disponible":
+    if not precio or precio == "No disponible":
         return None
 
     precio_limpio = re.sub(r"[^\d]", "", precio)
