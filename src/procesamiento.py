@@ -50,3 +50,64 @@ def comparar_productos(productos: list) -> list:
     )
 
     return productos_ordenados
+
+def normalizar_caracteristicas(producto: dict) -> dict:
+    """
+    Convierte las especificaciones de diferentes tiendas
+    a una estructura común para facilitar la comparación.
+    """
+
+    especificaciones = producto.get("especificaciones", {})
+
+    datos = {
+        "tienda": producto.get("tienda"),
+        "nombre": producto.get("nombre"),
+        "precio": limpiar_precio(
+            producto.get("precio_actual")
+        ),
+        "modelo": "No disponible",
+        "conectividad": "No disponible",
+        "autonomia": "No disponible",
+        "resistencia_agua": "No disponible",
+        "cancelacion_ruido": "No disponible"
+    }
+
+    for clave, valor in especificaciones.items():
+
+        clave_normalizada = clave.lower()
+
+        # Modelo
+        if (
+            "modelo" in clave_normalizada
+            or "referencia de los audífonos" in clave_normalizada
+        ):
+            datos["modelo"] = valor
+
+        # Conectividad
+        if (
+            "conectividad" in clave_normalizada
+            or clave_normalizada == "conexión"
+        ):
+            datos["conectividad"] = valor
+
+        # Batería / autonomía
+        if (
+            "bateria" in clave_normalizada
+            or "batería" in clave_normalizada
+            or "autonomía" in clave_normalizada
+        ):
+            datos["autonomia"] = valor
+
+        # Resistencia al agua
+        if "resistencia al agua" in clave_normalizada:
+            datos["resistencia_agua"] = valor
+
+        # Cancelación de ruido
+        if (
+            "tipo de audifonos" in clave_normalizada
+            or "tipo de audífonos" in clave_normalizada
+        ):
+            if "ruido" in valor.lower():
+                datos["cancelacion_ruido"] = "Sí"
+
+    return datos
