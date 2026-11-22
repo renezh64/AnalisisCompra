@@ -1,0 +1,38 @@
+name: CI - Pruebas Python
+
+on:
+  push:
+    branches:
+      - main
+      - master
+      - CamiloM
+
+  pull_request:
+    branches:
+      - main
+      - master
+
+jobs:
+
+  pruebas:
+
+    runs-on: ubuntu-latest
+
+    steps:
+
+      - name: Descargar repositorio
+        uses: actions/checkout@v5
+
+      - name: Configurar Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+
+      - name: Instalar dependencias
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Ejecutar pruebas automatizadas
+        run: |
+          python -m pytest
