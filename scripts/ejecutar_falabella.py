@@ -1,8 +1,8 @@
 from src.scraping import extraer_datos_falabella
 from src.procesamiento import limpiar_precio
+from src.config import URL_FALABELLA
 
-
-url = "https://www.falabella.com.co/falabella-co/product/73730348/airpods-5/73730348"
+url = URL_FALABELLA
 
 datos = extraer_datos_falabella(url)
 
