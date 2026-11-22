@@ -111,3 +111,128 @@ def normalizar_caracteristicas(producto: dict) -> dict:
                 datos["cancelacion_ruido"] = "Sí"
 
     return datos
+
+
+def extraer_horas_autonomia(texto: str):
+    """
+    Obtiene la cantidad de horas mencionada
+    en el texto de autonomía.
+    """
+
+    if not texto or texto == "No disponible":
+        return None
+
+    match = re.search(r"(\d+)", texto)
+
+    if not match:
+        return None
+
+    return int(match.group(1))
+
+def calcular_costo_beneficio(productos: list) -> list:
+    """
+    Calcula un puntaje de costo-beneficio para cada producto.
+
+    Ponderaciones:
+    - Precio: 40 %
+    - Autonomía: 25 %
+    - Cancelación de ruido: 20 %
+    - Resistencia al agua: 15 %
+
+    Retorna los productos ordenados de mayor a menor puntaje.
+    """
+
+    productos_normalizados = [
+        normalizar_caracteristicas(producto)
+        for producto in productos
+    ]
+
+    precios = [
+        producto["precio"]
+        for producto in productos_normalizados
+        if producto["precio"] is not None
+    ]
+
+    autonomias = [
+        extraer_horas_autonomia(producto["autonomia"])
+        for producto in productos_normalizados
+    ]
+
+    autonomias_validas = [
+        autonomia
+        for autonomia in autonomias
+        if autonomia is not None
+    ]
+
+    if not precios:
+        return []
+
+    precio_minimo = min(precios)
+
+    autonomia_maxima = (
+        max(autonomias_validas)
+        if autonomias_validas
+        else 0
+    )
+
+    resultados = []
+
+    for producto in productos_normalizados:
+
+        precio = producto["precio"]
+
+        autonomia = extraer_horas_autonomia(
+            producto["autonomia"]
+        )
+
+        # Precio: menor precio obtiene mejor puntuación
+        puntaje_precio = 0
+
+        if precio:
+            puntaje_precio = (
+                precio_minimo / precio
+            ) * 40
+
+        # Autonomía: mayor autonomía obtiene mejor puntuación
+        puntaje_autonomia = 0
+
+        if autonomia and autonomia_maxima > 0:
+            puntaje_autonomia = (
+                autonomia / autonomia_maxima
+            ) * 25
+
+        # Cancelación de ruido
+        puntaje_cancelacion = (
+            20
+            if producto["cancelacion_ruido"] == "Sí"
+            else 0
+        )
+
+        # Resistencia al agua
+        puntaje_resistencia = (
+            15
+            if producto["resistencia_agua"] != "No disponible"
+            else 0
+        )
+
+        puntaje_total = (
+            puntaje_precio
+            + puntaje_autonomia
+            + puntaje_cancelacion
+            + puntaje_resistencia
+        )
+
+        producto_resultado = producto.copy()
+
+        producto_resultado["puntaje"] = round(
+            puntaje_total,
+            2
+        )
+
+        resultados.append(producto_resultado)
+
+    return sorted(
+        resultados,
+        key=lambda producto: producto["puntaje"],
+        reverse=True
+    )
