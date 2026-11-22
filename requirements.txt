@@ -10,3 +10,4 @@ seaborn
 papermill
 jupyter
 nbconvert
+streamlit
